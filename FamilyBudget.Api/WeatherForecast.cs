@@ -1,4 +1,4 @@
-namespace FamilyBudget;
+namespace FamilyBudget.Api;
 
 public class WeatherForecast
 {

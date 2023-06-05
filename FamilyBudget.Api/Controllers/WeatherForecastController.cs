@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace FamilyBudget.Controllers;
+namespace FamilyBudget.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
