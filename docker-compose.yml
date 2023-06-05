@@ -1,0 +1,9 @@
+version: '3'
+services:
+  familybudgetapi:
+    build: ./FamilyBudget.Api
+    ports:
+      - 5000:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
