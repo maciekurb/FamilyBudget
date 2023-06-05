@@ -1,8 +1,9 @@
-﻿using FamilyBudget.Domain.Exceptions;
+﻿using FamilyBudget.Domain.Common;
+using FamilyBudget.Domain.Exceptions;
 
 namespace FamilyBudget.Domain.Entities;
 
-public class Income
+public class Income : BaseEntity
 {
     public decimal Amount { get; internal set; }
     public string Description { get; internal set; }

@@ -1,8 +1,9 @@
-﻿using FamilyBudget.Domain.Exceptions;
+﻿using FamilyBudget.Domain.Common;
+using FamilyBudget.Domain.Exceptions;
 
 namespace FamilyBudget.Domain.Entities;
 
-public class Category
+public class Category : BaseEntity
 {
     public string Name { get; internal set; }
 

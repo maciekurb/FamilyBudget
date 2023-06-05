@@ -1,8 +1,9 @@
-﻿using FamilyBudget.Domain.Exceptions;
+﻿using FamilyBudget.Domain.Common;
+using FamilyBudget.Domain.Exceptions;
 
 namespace FamilyBudget.Domain.Entities;
 
-public class User
+public class User : BaseEntity
 {
     public int Id { get; internal set; }
     public string Username { get; internal set; }
