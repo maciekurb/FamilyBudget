@@ -22,19 +22,22 @@ public class IncomeTests
         var income = Income.Create(amount, description, category);
 
         // Assert
+        income.IsSuccess.Should()
+            .BeTrue();
+        
         income.Should()
             .NotBeNull();
 
-        income.Amount.Should()
+        income.Value.Amount.Should()
             .Be(amount);
 
-        income.Description.Should()
+        income.Value.Description.Should()
             .Be(description);
 
-        income.Category.Should()
+        income.Value.Category.Should()
             .NotBeNull();
 
-        income.Category.Name.Should()
+        income.Value.Category.Name.Should()
             .Be(category.Name);
     }
 
@@ -42,15 +45,15 @@ public class IncomeTests
     [InlineData(0, "Salary", "Amount must be greater than zero.")]
     [InlineData(1000, "", "Description cannot be empty.")]
     [InlineData(1000, null, "Description cannot be empty.")]
-    [InlineData(1000, "Salary", "Category cannot be null.")]
+    [InlineData(1000, "Salary", "Expense must be linked to some category.")]
 
     public void CreateIncome_ThrowsDomainUserException(decimal amount, string description, string expectedException)
     {
         // Act
-        var result = Assert.Throws<DomainException>(() => Income.Create(amount, description, null));
+        var result = Income.Create(amount, description, null);
 
         // Assert
-        result.Message
+        result.Error
             .Should()
             .Be(expectedException);
     }

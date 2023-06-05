@@ -22,19 +22,22 @@ public class ExpenseTests
         var expense = Expense.Create(amount, description, category);
 
         // Assert
+        expense.IsSuccess.Should()
+            .BeTrue();
+        
         expense.Should()
             .NotBeNull();
 
-        expense.Amount.Should()
+        expense.Value.Amount.Should()
             .Be(amount);
 
-        expense.Description.Should()
+        expense.Value.Description.Should()
             .Be(description);
 
-        expense.Category.Should()
+        expense.Value.Category.Should()
             .NotBeNull();
 
-        expense.Category.Name.Should()
+        expense.Value.Category.Name.Should()
             .Be(category.Name);
     }
 
@@ -42,15 +45,15 @@ public class ExpenseTests
     [InlineData(0, "Housing", "Amount must be greater than zero.")]
     [InlineData(500, "", "Description cannot be empty.")]
     [InlineData(500, null, "Description cannot be empty.")]
-    [InlineData(500, "Housing", "Category cannot be null.")]
+    [InlineData(500, "Housing", "Expense must be linked to some category.")]
 
     public void CreateExpense_ThrowsDomainUserException(decimal amount, string description, string expectedException)
     {
         // Act
-        var result = Assert.Throws<DomainException>(() => Expense.Create(amount, description, null));
+        var result = Expense.Create(amount, description, null);
 
         // Assert
-        result.Message
+        result.Error
             .Should()
             .Be(expectedException);
     }

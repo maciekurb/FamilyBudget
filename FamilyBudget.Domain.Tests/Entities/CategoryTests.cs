@@ -17,10 +17,13 @@ public class CategoryTests
         var category = Category.Create(name);
 
         // Assert
+        category.IsSuccess.Should()
+            .BeTrue();
+
         category.Should()
             .NotBeNull();
 
-        category.Name.Should()
+        category.Value.Name.Should()
             .Be(name);
     }
 
@@ -29,7 +32,12 @@ public class CategoryTests
     [InlineData("")]
     public void CreateCategory_InvalidName_ThrowsDomainException(string category)
     {
-        // Arrange & Act & Assert
-        Assert.Throws<DomainException>(() => Category.Create(category));
+        var result = Category.Create(category);
+
+        result.IsFailure.Should()
+            .BeTrue();
+
+        result.Error.Should()
+            .Be("Name cannot be empty.");
     }
 }
