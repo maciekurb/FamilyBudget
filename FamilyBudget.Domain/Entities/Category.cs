@@ -1,4 +1,5 @@
-﻿using FamilyBudget.Domain.Common;
+﻿using CSharpFunctionalExtensions;
+using FamilyBudget.Domain.Common;
 using FamilyBudget.Domain.Exceptions;
 
 namespace FamilyBudget.Domain.Entities;
@@ -11,12 +12,12 @@ public class Category : BaseEntity
     {
         
     }
-    
-    public static Category Create(string name)
-    {
-        if (string.IsNullOrEmpty(name))
-            throw new DomainException("Name cannot be empty.");
 
-        return new Category { Name = name };
-    }
+    public static Result<Category> Create(string name) =>
+        Result.Success()
+            .Ensure(() => string.IsNullOrEmpty(name) == false, "Name cannot be empty.")
+            .Map(() => new Category
+            {
+                Name = name
+            });
 }

@@ -1,4 +1,5 @@
-﻿using FamilyBudget.Domain.Common;
+﻿using CSharpFunctionalExtensions;
+using FamilyBudget.Domain.Common;
 using FamilyBudget.Domain.Exceptions;
 
 namespace FamilyBudget.Domain.Entities;
@@ -11,17 +12,10 @@ public class Income : BaseEntity
     
     internal Income() { }
 
-    public static Income Create(decimal amount, string description, Category category)
-    {
-        if (amount <= 0)
-            throw new DomainException("Amount must be greater than zero.");
-
-        if (string.IsNullOrEmpty(description))
-            throw new DomainException("Description cannot be empty.");
-
-        if (category == null)
-            throw new DomainException("Category cannot be null.");
-
-        return new Income { Amount = amount, Description = description, Category = category };
-    }
+    public static Result<Income> Create(decimal amount, string description, Category? category) =>
+        Result.Success()
+            .Ensure(() => amount > 0, "Amount must be greater than zero.")
+            .Ensure(() => string.IsNullOrEmpty(description) == false, "Description cannot be empty.")
+            .Ensure(() => category != null, "Expense must be linked to some category.")
+            .Map(() => new Income { Amount = amount, Description = description, Category = category! });
 }

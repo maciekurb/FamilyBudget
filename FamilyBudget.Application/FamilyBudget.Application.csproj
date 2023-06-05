@@ -6,4 +6,26 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Budgets\Queries" />
+      <Folder Include="Categories\Commands" />
+      <Folder Include="Categories\DTOs" />
+      <Folder Include="Categories\Queries" />
+      <Folder Include="Expenses\Commands" />
+      <Folder Include="Expenses\Queries" />
+      <Folder Include="Incomes\Commands" />
+      <Folder Include="Incomes\Queries" />
+      <Folder Include="Users\Commands" />
+      <Folder Include="Users\Queries" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CSharpFunctionalExtensions" Version="2.39.0" />
+      <PackageReference Include="MediatR" Version="12.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FamilyBudget.Infrastructure\FamilyBudget.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

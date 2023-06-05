@@ -1,4 +1,5 @@
-﻿using FamilyBudget.Domain.Common;
+﻿using CSharpFunctionalExtensions;
+using FamilyBudget.Domain.Common;
 using FamilyBudget.Domain.Exceptions;
 
 namespace FamilyBudget.Domain.Entities;
@@ -6,7 +7,7 @@ namespace FamilyBudget.Domain.Entities;
 public class Budget : BaseEntity
 {
     public string Name { get; internal set; }
-    public User Owner { get; internal set; }
+    public User? Owner { get; internal set; }
     private readonly List<User> _sharedUsers = new List<User>();
     public IReadOnlyCollection<User> SharedUsers => _sharedUsers.AsReadOnly();
     private readonly List<Income> _incomes = new List<Income>();
@@ -19,41 +20,40 @@ public class Budget : BaseEntity
         
     }
 
-    public static Budget Create(string name, User owner)
-    {
-        if (string.IsNullOrEmpty(name))
-            throw new DomainException("Name cannot be empty.");
+    public static Result<Budget> Create(string name, User? owner) =>
+        Result.Success()
+            .Ensure(() => string.IsNullOrEmpty(name) == false, "Name cannot be empty.")
+            .Ensure(() => owner != null, "Owner cannot be null.")
+            .Map(() => new Budget
+            {
+                Name = name,
+                Owner = owner
+            });
 
-        if (owner == null)
-            throw new DomainException("Owner cannot be null.");
-
-        return new Budget { Name = name, Owner = owner };
-    }
+    public Result ShareBudget(User? user)
+        => Result.Success()
+            .Ensure(() => user != null, "User not found")
+            .Ensure(() => _sharedUsers.Any(u => u.Id == user.Id) == false, "User is already shared with this budget.")
+            .Tap(() => _sharedUsers.Add(user!));
+    public Result AddIncomes(IEnumerable<Income> incomes)
+        => Result.Success()
+            .Map(() => incomes.Select(AddIncome))
+            .Ensure(results => Result.Combine(results).IsSuccess, "Invalid incomes")
+            .Tap(() => _incomes.AddRange(incomes));
     
-    public void ShareBudget(User user)
-    {
-        if(user == null)
-            throw new DomainException("User cannot be null.");
-
-        if(_sharedUsers.Any(u => u.Id == user.Id))
-            throw new DomainException("User is already shared with this budget.");
-
-        _sharedUsers.Add(user);
-    }
-
-    public void AddIncome(Income income)
-    {
-        if(income == null)
-            throw new DomainException("Income cannot be null.");
-
-        _incomes.Add(income);
-    }
-
-    public void AddExpense(Expense expense)
-    {
-        if(expense == null)
-            throw new DomainException("Expense cannot be null.");
-
-        _expenses.Add(expense);
-    }
+    public Result AddIncome(Income? income)
+        => Result.Success()
+            .Ensure(() => income != null, "Income cannot be null")
+            .Tap(() => _incomes.Add(income!));
+    
+    public Result AddExpenses(IEnumerable<Expense> expenses)
+        => Result.Success()
+            .Map(() => expenses.Select(AddExpense))
+            .Ensure(results => Result.Combine(results).IsSuccess, "Invalid expenses")
+            .Tap(() => _expenses.AddRange(expenses));
+    
+    public Result AddExpense(Expense? expense)
+        => Result.Success()
+            .Ensure(() => expense != null, "Expense cannot be null")
+            .Tap(() => _expenses.Add(expense!));
 }

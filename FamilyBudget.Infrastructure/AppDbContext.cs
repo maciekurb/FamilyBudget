@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace FamilyBudget.Infrastructure;
 
-public class FamilyBudgetDbContext : DbContext
+public class AppDbContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Budget> Budgets { get; set; }
@@ -15,7 +15,7 @@ public class FamilyBudgetDbContext : DbContext
     public DbSet<Expense> Expenses { get; set; }
     public DbSet<Category> Categories { get; set; }
     
-    public FamilyBudgetDbContext(DbContextOptions<FamilyBudgetDbContext> options) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
 
@@ -30,7 +30,7 @@ public class FamilyBudgetDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         // Apply configurations
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(FamilyBudgetDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
         // Set global query filter for all entities implementing ISoftDelete
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
