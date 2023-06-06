@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Budgets\Queries" />
       <Folder Include="Categories\Commands" />
       <Folder Include="Categories\DTOs" />
       <Folder Include="Categories\Queries" />
@@ -20,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="12.0.1" />
       <PackageReference Include="CSharpFunctionalExtensions" Version="2.39.0" />
       <PackageReference Include="MediatR" Version="12.0.1" />
     </ItemGroup>
