@@ -2,8 +2,8 @@
 
 public class IncomeDto
 {
-    public Guid? IncomeId { get; internal set; }
-    public decimal Amount { get; internal set; }
-    public string Description { get; internal set; }
-    public string Category { get; internal set; }
+    public Guid? IncomeId { get; set; }
+    public decimal Amount { get; set; }
+    public string Description { get; set; }
+    public string Category { get; set; }
 }
