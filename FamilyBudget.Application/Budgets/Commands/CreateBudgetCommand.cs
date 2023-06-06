@@ -1,54 +1,70 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using FamilyBudget.Application.Budgets.DTOs;
 using FamilyBudget.Application.Expenses.DTOs;
 using FamilyBudget.Application.Incomes.DTOs;
 using FamilyBudget.Domain.Entities;
 using FamilyBudget.Infrastructure;
+using FamilyBudget.Infrastructure.Providers;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace FamilyBudget.Application.Budgets.Commands;
 
-public record CreateBudgetCommand(BudgetDto Dto) : IRequest<Result<Budget>>;
+public record CreateBudgetCommand(BudgetDto Dto) : IRequest<Result<BudgetDto>>;
 
-public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, Result<Budget>>
+public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, Result<BudgetDto>>
 {
     private readonly AppDbContext _appDbContext;
-    
-    public CreateBudgetCommandHandler(AppDbContext appDbContext)
+    private readonly IMapper _mapper;
+    private readonly ICategoryProvider _categoryProvider;
+
+    public CreateBudgetCommandHandler(AppDbContext appDbContext, IMapper mapper, ICategoryProvider categoryProvider)
     {
         _appDbContext = appDbContext;
+        _mapper = mapper;
+        _categoryProvider = categoryProvider;
     }
 
-    public Task<Result<Budget>> Handle(CreateBudgetCommand request, CancellationToken cancellationToken) =>
+    public Task<Result<BudgetDto>> Handle(CreateBudgetCommand request, CancellationToken cancellationToken) =>
         Result.Success()
             .Map(async () => await _appDbContext.Users.FindAsync(request.Dto.UserId))
             .Ensure(user => user != null, "User not found")
             .Bind(user => Budget.Create(request.Dto.Name, user))
             .CheckIf(_ => request.Dto.Incomes.Any(),
-                budget =>
+                async budget =>
                 {
-                    var incomes = CreateIncomes(request.Dto.Incomes);
+                    var incomes = await CreateIncomes(request.Dto.Incomes, cancellationToken);
                     if (incomes.IsFailure)
                         return Result.Failure(incomes.Error);
 
                     return budget.AddIncomes(incomes.Value);
                 })
             .CheckIf(_ => request.Dto.Expenses.Any(),
-                budget =>
+                async budget =>
                 {
-                    var expenses = CreateExpenses(request.Dto.Expenses);
+                    var expenses = await CreateExpenses(request.Dto.Expenses, cancellationToken);
                     if (expenses.IsFailure)
                         return Result.Failure(expenses.Error);
 
                     return budget.AddExpenses(expenses.Value);
-                });
+                })
+            .CheckIf(_ => request.Dto.SharedToUsersIds.Any(),
+                async budget =>
+                {
+                    var users = await _appDbContext.Users.Where(x => request.Dto.SharedToUsersIds.Contains(x.Id))
+                        .ToListAsync(cancellationToken);
 
-    private Result<List<Income>> CreateIncomes(IEnumerable<IncomeDto> incomeDtos)
+                    return budget.ShareBudget(users);
+                })
+            .Map(budget => _mapper.Map<BudgetDto>(budget));
+
+    private async Task<Result<List<Income>>> CreateIncomes(IEnumerable<IncomeDto> incomeDtos, CancellationToken cancellationToken)
     {
         var incomes = new List<Income>();
         foreach (var incomeDto in incomeDtos)
         {
-            var categoryResult = Category.Create(incomeDto.Category);
+            var categoryResult = await _categoryProvider.GetOrCreateAsync(incomeDto.Category, cancellationToken);
             if (categoryResult.IsFailure)
                 return Result.Failure<List<Income>>(categoryResult.Error);
 
@@ -62,12 +78,12 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, R
         return Result.Success(incomes);
     }
 
-    private Result<List<Expense>> CreateExpenses(IEnumerable<ExpenseDto> expensesDtos)
+    private async Task<Result<List<Expense>>> CreateExpenses(IEnumerable<ExpenseDto> expensesDtos, CancellationToken cancellationToken)
     {
         var incomes = new List<Expense>();
         foreach (var expenseDto in expensesDtos)
         {
-            var categoryResult = Category.Create(expenseDto.Category);
+            var categoryResult = await _categoryProvider.GetOrCreateAsync(expenseDto.Category, cancellationToken);
             if (categoryResult.IsFailure)
                 return Result.Failure<List<Expense>>(categoryResult.Error);
 
