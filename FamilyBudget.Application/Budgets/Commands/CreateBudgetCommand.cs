@@ -57,6 +57,11 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, R
 
                     return budget.ShareBudget(users);
                 })
+            .Tap(async budget =>
+            {
+                await _appDbContext.Budgets.AddAsync(budget, cancellationToken);
+                await _appDbContext.SaveChangesAsync(cancellationToken);
+            })
             .Map(budget => _mapper.Map<BudgetDto>(budget));
 
     private async Task<Result<List<Income>>> CreateIncomes(IEnumerable<IncomeDto> incomeDtos, CancellationToken cancellationToken)

@@ -12,6 +12,7 @@ public class Budget : BaseEntity
     public virtual List<Income> Incomes { get; internal set; } = new List<Income>();
     public virtual List<Expense> Expenses { get; internal set; } = new List<Expense>();
 
+
     internal Budget()
     {
         
@@ -44,25 +45,23 @@ public class Budget : BaseEntity
             .Ensure(() => user != null, "User not found")
             .Ensure(() => SharedUsers.Any(u => u.Id == user.Id) == false, "User is already shared with this budget.")
             .Tap(() => SharedUsers.Add(user!));
-    
+
     public Result AddIncomes(IEnumerable<Income> incomes)
         => Result.Success()
             .Map(() => incomes.Select(AddIncome))
             .Map(results => Result.Combine(results))
-            .Ensure(combinedResult => combinedResult.IsSuccess, combinedResult => combinedResult.Error)            
-            .Tap(() => Incomes.AddRange(incomes));
+            .Ensure(combinedResult => combinedResult.IsSuccess, combinedResult => combinedResult.Error);            
     
     public Result AddIncome(Income? income)
         => Result.Success()
             .Ensure(() => income != null, "Income cannot be null")
             .Tap(() => Incomes.Add(income!));
-    
+
     public Result AddExpenses(IEnumerable<Expense> expenses)
         => Result.Success()
             .Map(() => expenses.Select(AddExpense))
             .Map(results => Result.Combine(results))
-            .Ensure(combinedResult => combinedResult.IsSuccess, combinedResult => combinedResult.Error)            
-            .Tap(() => Expenses.AddRange(expenses));
+            .Ensure(combinedResult => combinedResult.IsSuccess, combinedResult => combinedResult.Error);            
     
     public Result AddExpense(Expense? expense)
         => Result.Success()

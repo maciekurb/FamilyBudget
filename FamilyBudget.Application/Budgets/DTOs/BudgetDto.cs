@@ -9,7 +9,7 @@ public class BudgetDto
     public Guid? BudgetId { get; set; }
     public Guid UserId { get; set; }
     public string Name { get; set; }
-    public IEnumerable<IncomeDto> Incomes { get; set; } = new List<IncomeDto>();
-    public IEnumerable<ExpenseDto> Expenses { get; set; } = new List<ExpenseDto>();
-    public IEnumerable<Guid> SharedToUsersIds { get; set; } = new List<Guid>();
+    public IEnumerable<IncomeDto> Incomes { get; set; }
+    public IEnumerable<ExpenseDto> Expenses { get; set; }
+    public IEnumerable<Guid> SharedToUsersIds { get; set; }
 }

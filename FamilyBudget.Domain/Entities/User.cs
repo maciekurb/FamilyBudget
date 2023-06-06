@@ -12,6 +12,8 @@ public class User : IdentityUser<Guid>, IAuditableEntity, ISoftDelete
     public DateTime? ModifiedAt { get; set; }
     public bool IsDeleted { get; set; }
     public virtual ICollection<Budget> Budgets { get; internal set; }
+    
+    public virtual ICollection<Budget> SharedBudgets { get; internal set; }
 
     internal User()
     {
