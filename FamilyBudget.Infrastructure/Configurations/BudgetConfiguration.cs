@@ -16,8 +16,7 @@ public class BudgetConfiguration : IEntityTypeConfiguration<Budget>
 
         builder.HasOne(b => b.Owner)
             .WithMany(u => u.Budgets)
-            .HasForeignKey(b => b.OwnerId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(b => b.OwnerId);
 
         builder.HasMany(b => b.Incomes)
             .WithOne(i => i.Budget)
