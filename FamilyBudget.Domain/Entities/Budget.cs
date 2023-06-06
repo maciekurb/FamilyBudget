@@ -29,16 +29,30 @@ public class Budget : BaseEntity
                 Name = name,
                 Owner = owner
             });
+    
+    public Result Update(string name) =>
+        Result.Success()
+            .Ensure(() => string.IsNullOrEmpty(name) == false, "Name cannot be empty.")
+            .Tap(() => Name = name);
+    
+    public Result ShareBudget(IEnumerable<User> users)
+        => Result.Success()
+            .Map(() => users.Select(ShareBudget))
+            .Map(results => Result.Combine(results))
+            .Ensure(combinedResult => combinedResult.IsSuccess, combinedResult => combinedResult.Error)
+            .Tap(() => _sharedUsers.AddRange(users));
 
     public Result ShareBudget(User? user)
         => Result.Success()
             .Ensure(() => user != null, "User not found")
             .Ensure(() => _sharedUsers.Any(u => u.Id == user.Id) == false, "User is already shared with this budget.")
             .Tap(() => _sharedUsers.Add(user!));
+    
     public Result AddIncomes(IEnumerable<Income> incomes)
         => Result.Success()
             .Map(() => incomes.Select(AddIncome))
-            .Ensure(results => Result.Combine(results).IsSuccess, "Invalid incomes")
+            .Map(results => Result.Combine(results))
+            .Ensure(combinedResult => combinedResult.IsSuccess, combinedResult => combinedResult.Error)            
             .Tap(() => _incomes.AddRange(incomes));
     
     public Result AddIncome(Income? income)
@@ -49,7 +63,8 @@ public class Budget : BaseEntity
     public Result AddExpenses(IEnumerable<Expense> expenses)
         => Result.Success()
             .Map(() => expenses.Select(AddExpense))
-            .Ensure(results => Result.Combine(results).IsSuccess, "Invalid expenses")
+            .Map(results => Result.Combine(results))
+            .Ensure(combinedResult => combinedResult.IsSuccess, combinedResult => combinedResult.Error)            
             .Tap(() => _expenses.AddRange(expenses));
     
     public Result AddExpense(Expense? expense)
