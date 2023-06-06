@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using FamilyBudget.Domain.Common;
 using FamilyBudget.Domain.Entities;
+using FamilyBudget.Infrastructure.Configurations;
 using FamilyBudget.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -28,6 +29,8 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(BudgetConfiguration).Assembly);
 
         // Apply configurations
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
