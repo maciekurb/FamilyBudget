@@ -7,13 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Categories\Commands" />
-      <Folder Include="Categories\DTOs" />
-      <Folder Include="Categories\Queries" />
-      <Folder Include="Expenses\Commands" />
-      <Folder Include="Expenses\Queries" />
-      <Folder Include="Incomes\Commands" />
-      <Folder Include="Incomes\Queries" />
       <Folder Include="Users\Commands" />
       <Folder Include="Users\Queries" />
     </ItemGroup>

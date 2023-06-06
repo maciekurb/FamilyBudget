@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using FamilyBudget.Domain.Common;
-using FamilyBudget.Domain.Exceptions;
 
 namespace FamilyBudget.Domain.Entities;
 

@@ -1,5 +1,4 @@
 ﻿using FamilyBudget.Domain.Entities;
-using FamilyBudget.Domain.Exceptions;
 using FluentAssertions;
 using Xunit;
 

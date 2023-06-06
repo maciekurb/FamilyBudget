@@ -1,5 +1,5 @@
-﻿using FamilyBudget.Domain.Common;
-using FamilyBudget.Domain.Exceptions;
+﻿using CSharpFunctionalExtensions;
+using FamilyBudget.Domain.Common;
 
 namespace FamilyBudget.Domain.Entities;
 
@@ -15,25 +15,18 @@ public class User : BaseEntity
     {
     }
 
-    public static User Create(string username, string email)
-    {
-        if(string.IsNullOrEmpty(username))
-            throw new DomainException("Username cannot be empty.");
-        if(string.IsNullOrEmpty(email))
-            throw new DomainException("Email cannot be empty.");
-        
-        return new User
-        {
-            Username = username,
-            Email = email
-        };
-    }
-    
-    public void AddBudget(Budget budget)
-    {
-        if(budget == null)
-            throw new DomainException("Budget cannot be null.");
+    public static Result<User> Create(string username, string email) =>
+        Result.Success()
+            .Ensure(() => string.IsNullOrEmpty(username) == false, "Username cannot be empty.")
+            .Ensure(() => string.IsNullOrEmpty(email) == false, "Email cannot be empty.")
+            .Map(() => new User
+            {
+                Username = username,
+                Email = email
+            });
 
-        _budgets.Add(budget);
-    }
+    public Result AddBudget(Budget? budget) =>
+        Result.Success()
+            .Ensure(() => budget != null, "Budget cannot be null.")
+            .Tap(() => _budgets.Add(budget!));
 }

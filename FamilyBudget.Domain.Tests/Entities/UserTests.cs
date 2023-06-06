@@ -1,5 +1,4 @@
 ﻿using FamilyBudget.Domain.Entities;
-using FamilyBudget.Domain.Exceptions;
 using FluentAssertions;
 using Xunit;
 
@@ -18,13 +17,17 @@ public class UserTests
         var user = User.Create(username, email);
 
         // Assert
-        user.Should()
+        user.IsFailure
+            .Should()
+            .BeFalse();
+        
+        user.Value.Should()
             .NotBeNull();
 
-        user.Username.Should()
+        user.Value.Username.Should()
             .Be(username);
 
-        user.Email.Should()
+        user.Value.Email.Should()
             .Be(email);
     }
 
@@ -35,7 +38,12 @@ public class UserTests
     [InlineData("TestUser", "")]
     public void CreateUser_InvalidUsernameOrEmail_ThrowsDomainUserException(string username, string email)
     {
-        // Arrange & Act & Assert
-        Assert.Throws<DomainException>(() => User.Create(username, email));
+        // Act
+        var result = User.Create(username, email);
+
+        // Assert
+        result.IsFailure
+            .Should()
+            .BeTrue();
     }
 }
