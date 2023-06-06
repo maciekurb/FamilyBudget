@@ -7,12 +7,10 @@ public class Budget : BaseEntity
 {
     public string Name { get; internal set; }
     public User? Owner { get; internal set; }
-    private readonly List<User> _sharedUsers = new List<User>();
-    public IReadOnlyCollection<User> SharedUsers => _sharedUsers.AsReadOnly();
-    private readonly List<Income> _incomes = new List<Income>();
-    public IReadOnlyCollection<Income> Incomes => _incomes.AsReadOnly();
-    private readonly List<Expense> _expenses = new List<Expense>();
-    public IReadOnlyCollection<Expense> Expenses => _expenses.AsReadOnly();
+    public Guid OwnerId { get; set; }
+    public virtual List<User> SharedUsers { get; internal set; } = new List<User>();
+    public virtual List<Income> Incomes { get; internal set; } = new List<Income>();
+    public virtual List<Expense> Expenses { get; internal set; } = new List<Expense>();
 
     internal Budget()
     {
@@ -39,35 +37,35 @@ public class Budget : BaseEntity
             .Map(() => users.Select(ShareBudget))
             .Map(results => Result.Combine(results))
             .Ensure(combinedResult => combinedResult.IsSuccess, combinedResult => combinedResult.Error)
-            .Tap(() => _sharedUsers.AddRange(users));
+            .Tap(() => SharedUsers.AddRange(users));
 
     public Result ShareBudget(User? user)
         => Result.Success()
             .Ensure(() => user != null, "User not found")
-            .Ensure(() => _sharedUsers.Any(u => u.Id == user.Id) == false, "User is already shared with this budget.")
-            .Tap(() => _sharedUsers.Add(user!));
+            .Ensure(() => SharedUsers.Any(u => u.Id == user.Id) == false, "User is already shared with this budget.")
+            .Tap(() => SharedUsers.Add(user!));
     
     public Result AddIncomes(IEnumerable<Income> incomes)
         => Result.Success()
             .Map(() => incomes.Select(AddIncome))
             .Map(results => Result.Combine(results))
             .Ensure(combinedResult => combinedResult.IsSuccess, combinedResult => combinedResult.Error)            
-            .Tap(() => _incomes.AddRange(incomes));
+            .Tap(() => Incomes.AddRange(incomes));
     
     public Result AddIncome(Income? income)
         => Result.Success()
             .Ensure(() => income != null, "Income cannot be null")
-            .Tap(() => _incomes.Add(income!));
+            .Tap(() => Incomes.Add(income!));
     
     public Result AddExpenses(IEnumerable<Expense> expenses)
         => Result.Success()
             .Map(() => expenses.Select(AddExpense))
             .Map(results => Result.Combine(results))
             .Ensure(combinedResult => combinedResult.IsSuccess, combinedResult => combinedResult.Error)            
-            .Tap(() => _expenses.AddRange(expenses));
+            .Tap(() => Expenses.AddRange(expenses));
     
     public Result AddExpense(Expense? expense)
         => Result.Success()
             .Ensure(() => expense != null, "Expense cannot be null")
-            .Tap(() => _expenses.Add(expense!));
+            .Tap(() => Expenses.Add(expense!));
 }

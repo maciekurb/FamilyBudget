@@ -1,8 +1,11 @@
-﻿namespace FamilyBudget.Domain.Common;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FamilyBudget.Domain.Common;
 
 public abstract class BaseEntity : IEntity, IAuditableEntity, ISoftDelete
 {
-    public Guid Id { get; }
+    [Key]
+    public Guid Id { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime ModifiedAt { get; set; }
     public bool IsDeleted { get; protected set; }

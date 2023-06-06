@@ -7,7 +7,10 @@ public class Income : BaseEntity
 {
     public decimal Amount { get; internal set; }
     public string Description { get; internal set; }
+    public Guid CategoryId { get; internal set; }
     public Category Category { get; internal set; }
+    public Budget Budget { get; internal set; }
+    public Guid BudgetId { get; internal set; }
     
     internal Income() { }
 

@@ -6,6 +6,8 @@ namespace FamilyBudget.Domain.Entities;
 public class Category : BaseEntity
 {
     public string Name { get; internal set; }
+    public virtual ICollection<Income> Incomes { get; private set; }
+    public virtual ICollection<Expense> Expenses { get; private set; }
 
     internal Category()
     {

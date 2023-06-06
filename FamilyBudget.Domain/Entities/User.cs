@@ -7,9 +7,7 @@ public class User : BaseEntity
 {
     public string Username { get; internal set; }
     public string Email { get; internal set; }
-    
-    private readonly List<Budget> _budgets = new List<Budget>();
-    public IReadOnlyCollection<Budget> Budgets => _budgets.AsReadOnly();
+    public virtual ICollection<Budget> Budgets { get; internal set; }
 
     internal User()
     {
@@ -28,5 +26,5 @@ public class User : BaseEntity
     public Result AddBudget(Budget? budget) =>
         Result.Success()
             .Ensure(() => budget != null, "Budget cannot be null.")
-            .Tap(() => _budgets.Add(budget!));
+            .Tap(() => Budgets.Add(budget!));
 }
