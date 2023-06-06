@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: familybudget
+      POSTGRES_USER: common
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "6543:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  familybudgetapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:80
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:80
+      ConnectionStrings__FamilyBudget: Server=db;Port=5432;Database=familybudget;User Id=common;Password=password123;
+      
+volumes:
+  db_data: {}
