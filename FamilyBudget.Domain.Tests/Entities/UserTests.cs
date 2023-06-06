@@ -24,7 +24,7 @@ public class UserTests
         user.Value.Should()
             .NotBeNull();
 
-        user.Value.Username.Should()
+        user.Value.UserName.Should()
             .Be(username);
 
         user.Value.Email.Should()

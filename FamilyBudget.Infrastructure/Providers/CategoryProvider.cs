@@ -1,9 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using FamilyBudget.Domain.Entities;
+using FamilyBudget.Infrastructure.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
 namespace FamilyBudget.Infrastructure.Providers;
 
+[Injectable]
 public interface ICategoryProvider
 {
     Task<Result<Category>> GetOrCreateAsync(string categoryName, CancellationToken cancellationToken);

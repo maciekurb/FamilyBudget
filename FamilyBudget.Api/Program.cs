@@ -1,6 +1,10 @@
 using FamilyBudget.Api.Installers;
+using FamilyBudget.Application.Users.Commands;
+using FamilyBudget.Domain.Entities;
 using FamilyBudget.Infrastructure;
-using FamilyBudget.Infrastructure.Providers;
+using FamilyBudget.Infrastructure.DependencyInjection;
+using FamilyBudget.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,12 +21,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.EnableSensitiveDataLogging();
     options.UseNpgsql(builder.Configuration.GetConnectionString("FamilyBudget"));
 });
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateAccountCommand).Assembly));
+builder.Services.AddInjectables();
 
-builder.Services.AddScoped<ICategoryProvider, CategoryProvider>();
+builder.Services.AddIdentity<User, IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 

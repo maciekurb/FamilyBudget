@@ -15,7 +15,7 @@ public class BudgetTests
     {
         _owner = new User
         {
-            Username = "TestUser",
+            UserName = "TestUser",
             Email = "testuser@example.com"
         };
 
@@ -177,7 +177,7 @@ public class BudgetTests
         var sharedUser = new User
         {
             Email = "shareduser@example.com",
-            Username = "SharedUser"
+            UserName = "SharedUser"
         };
 
         var budget = new Budget

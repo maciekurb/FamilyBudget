@@ -9,15 +9,17 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 
 # Copy csproj and restore as distinct layers
-COPY ["FamilyBudget.Api.csproj", "./"]
+COPY */*.csproj ./
+COPY ["FamilyBudget.Api/FamilyBudget.Api.csproj", "FamilyBudget.Api/"]
+
 RUN dotnet restore "FamilyBudget.Api.csproj"
 
 # Copy everything else and build
 COPY . .
-RUN dotnet build "FamilyBudget.Api.csproj" -c Release -o /app/build
+RUN dotnet build "FamilyBudget.sln" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "FamilyBudget.Api.csproj" -c Release -o /app/publish
+RUN dotnet publish "FamilyBudget.sln" -c Release -o /app/publish
 
 # Build runtime image
 FROM base AS final
