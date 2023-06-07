@@ -1,0 +1,28 @@
+<form [formGroup]="form">
+<h2 mat-dialog-title>Budget Details</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-form-field appearance="fill">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" readonly>
+  </mat-form-field>
+  <div formArrayName="incomes">
+    <h2>Incomes:</h2>
+    <div *ngFor="let income of incomes.controls; let i = index" [formGroupName]="i" class="income-entry">
+      <p>Amount: {{income.value.amount}}</p>
+      <p>Description: {{income.value.description}}</p>
+      <p>Category: {{income.value.category}}</p>
+    </div>
+  </div>
+  <div formArrayName="expenses">
+    <h2>Expenses:</h2>
+    <div *ngFor="let expense of expenses.controls; let i = index" [formGroupName]="i" class="expense-entry">
+      <p>Amount: {{expense.value.amount}}</p>
+      <p>Description: {{expense.value.description}}</p>
+      <p>Category: {{expense.value.category}}</p>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Close</button>
+</mat-dialog-actions>
+</form>

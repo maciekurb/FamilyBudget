@@ -1,0 +1,10 @@
+nav {
+  display: flex;
+  justify-content: center;
+}
+
+.navbar-brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}

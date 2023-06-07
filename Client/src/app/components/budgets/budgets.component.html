@@ -1,0 +1,27 @@
+
+<div class="example-container mat-elevation-z8">
+
+  <mat-card>
+    <button mat-button (click)="openDialog()">Add Budget</button>
+
+    <mat-table [dataSource]="budgets">
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+        <mat-cell *matCellDef="let budget"> {{budget.name}} </mat-cell>
+      </ng-container>
+
+      <!-- Details Button Column -->
+      <ng-container matColumnDef="detailsButton">
+        <mat-header-cell *matHeaderCellDef> Details </mat-header-cell>
+        <mat-cell *matCellDef="let budget">
+          <button mat-raised-button color="primary" (click)="openDetails(budget.budgetId)">View Details</button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </mat-card>
+</div>

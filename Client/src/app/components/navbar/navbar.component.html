@@ -1,0 +1,7 @@
+<mat-toolbar color="primary">
+  <button mat-button routerLink="budgets/">Home</button>
+  <span class="example-spacer"></span>
+  <button mat-icon-button *ngIf="authService.isAuthenticatedUser()" (click)="authService.logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
