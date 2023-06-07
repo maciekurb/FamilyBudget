@@ -1,27 +1,54 @@
-# Client
+Family Budget Application
+=========================
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.4.
+This repository contains a Family Budget application composed of a .NET 6 API backend and an Angular frontend. Each application is containerized using Docker.
 
-## Development server
+Prerequisites
+-------------
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Before you can run the Family Budget application, you'll need the following software installed on your machine:
 
-## Code scaffolding
+*   [Docker](https://www.docker.com/get-started): A platform that uses OS-level virtualization to deliver software in packages called containers.
+*   [Docker Compose](https://docs.docker.com/compose/install/): A tool for defining and managing multi-container Docker applications.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Ensure that Docker is installed and running correctly by typing the following command in your terminal:
 
-## Build
+`docker --version docker-compose --version`
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Each of these commands should return the version of Docker and Docker Compose, respectively.
 
-## Running unit tests
+Getting Started
+---------------
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Here are the steps to get the Family Budget application up and running:
 
-## Running end-to-end tests
+1.  **Clone the Repository**
+    
+    Start by cloning the repository to your local machine. Open a terminal window, navigate to the directory where you want the project to reside, and run the following command:
+    
+    `git clone https://github.com/maciekurb/FamilyBudget.git`
+        
+2.  **Navigate to the Project Directory**
+    
+    Change your current directory to the `family-budget` directory:
+        
+    `cd family-budget`
+    
+3.  **Build and Start the Docker Containers**
+    
+    Use Docker Compose to build the Docker images and start the Docker containers:
+        
+    `docker-compose up --build`
+    
+    This command builds the images for the backend and frontend applications if they haven't been built before and starts the Docker containers. The `--build` flag ensures that Docker Compose rebuilds the images if there have been changes to the Dockerfiles.
+    
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+After running this command, Docker Compose starts all the services defined in the `docker-compose.yml` file. This includes the .NET API, the Angular frontend, and the PostgreSQL database.
 
-## Further help
+You can now access the application at `http://localhost:4200` and the API at `http://localhost:5000`.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Please note that it may take a few minutes for all the services to start up, especially on the first run.
+
+To stop the Docker containers, press `CTRL+C` in your terminal. If you want to completely remove the Docker containers, use the following command:
+
+`docker-compose down`
