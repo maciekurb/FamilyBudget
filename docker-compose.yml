@@ -13,7 +13,7 @@ services:
       - db_data:/var/lib/postgresql/data
   familybudgetapi:
     build:
-      context: .
+      context: ./Api
       dockerfile: Dockerfile
     ports:
       - 5000:80
@@ -21,6 +21,16 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:80
       ConnectionStrings__FamilyBudget: Server=db;Port=5432;Database=familybudget;User Id=common;Password=password123;
+  client:
+    build:
+      context: ./Client
+      dockerfile: Dockerfile
+    volumes:
+      - ./Client:/app
+    ports:
+      - "4200:80"
+    environment:
+      - API_URL=http://localhost:5000
       
 volumes:
   db_data: {}
