@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FamilyBudget.Domain.Common;
+using FamilyBudget.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyBudget.Api.Controllers;
@@ -8,6 +9,16 @@ namespace FamilyBudget.Api.Controllers;
 [Route("api/[controller]")]
 public abstract class ControllerBase : Controller
 {
+    protected Guid UserId
+    {
+        get
+        {
+            var userId = User.Claims.First(i => i.Type == ApiClaimType.UserId).Value;
+
+            return Guid.Parse(userId);
+        }
+    }
+    
     protected IActionResult HandleCommandResult(Result result) =>
         result.IsSuccess
             ? NoContent()

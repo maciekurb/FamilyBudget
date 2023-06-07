@@ -14,6 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\FamilyBudget.Api\FamilyBudget.Api.csproj" />
       <ProjectReference Include="..\FamilyBudget.Domain\FamilyBudget.Domain.csproj" />
     </ItemGroup>
 

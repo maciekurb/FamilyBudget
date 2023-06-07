@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FamilyBudget.Application.Budgets.Commands;
 
-public record CreateBudgetCommand(BudgetDto Dto) : IRequest<Result<BudgetDto>>;
+public record CreateBudgetCommand(Guid UserId, BudgetDto Dto) : IRequest<Result<BudgetDto>>;
 
 public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, Result<BudgetDto>>
 {
@@ -28,7 +28,7 @@ public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, R
 
     public Task<Result<BudgetDto>> Handle(CreateBudgetCommand request, CancellationToken cancellationToken) =>
         Result.Success()
-            .Map(async () => await _appDbContext.Users.FindAsync(request.Dto.UserId))
+            .Map(async () => await _appDbContext.Users.FindAsync(request.UserId))
             .Ensure(user => user != null, "User not found")
             .Bind(user => Budget.Create(request.Dto.Name, user))
             .CheckIf(_ => request.Dto.Incomes.Any(),

@@ -7,7 +7,6 @@ namespace FamilyBudget.Application.Budgets.DTOs;
 public class BudgetDto
 {
     public Guid? BudgetId { get; set; }
-    public Guid UserId { get; set; }
     public string Name { get; set; }
     public IEnumerable<IncomeDto> Incomes { get; set; }
     public IEnumerable<ExpenseDto> Expenses { get; set; }

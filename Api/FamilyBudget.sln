@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1267984C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudget.Domain.Tests", "FamilyBudget.Domain.Tests\FamilyBudget.Domain.Tests.csproj", "{B92EB694-FF41-4F81-8712-63CD4A2351F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudget.Api.Tests", "FamilyBudget.Api.Tests\FamilyBudget.Api.Tests.csproj", "{F748C2E6-4A27-4BF2-ABBA-066AFBBCDC7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,8 +40,13 @@ Global
 		{B92EB694-FF41-4F81-8712-63CD4A2351F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B92EB694-FF41-4F81-8712-63CD4A2351F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B92EB694-FF41-4F81-8712-63CD4A2351F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F748C2E6-4A27-4BF2-ABBA-066AFBBCDC7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F748C2E6-4A27-4BF2-ABBA-066AFBBCDC7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F748C2E6-4A27-4BF2-ABBA-066AFBBCDC7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F748C2E6-4A27-4BF2-ABBA-066AFBBCDC7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B92EB694-FF41-4F81-8712-63CD4A2351F3} = {1267984C-2218-4C0D-88A9-A03966DD27BC}
+		{F748C2E6-4A27-4BF2-ABBA-066AFBBCDC7A} = {1267984C-2218-4C0D-88A9-A03966DD27BC}
 	EndGlobalSection
 EndGlobal

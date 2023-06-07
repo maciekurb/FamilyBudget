@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FamilyBudget.Application.Services;
 using FamilyBudget.Application.Users.DTOs;
+using FamilyBudget.Domain.Common;
 using FamilyBudget.Domain.Entities;
 using FamilyBudget.Infrastructure.Identity;
 using MediatR;
@@ -24,6 +25,7 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
         Result.Success()
             .Ensure(() => request.Dto != null, nameof(request.Dto))
             .Map(() => _userManager.FindByUsernameAsync(request.Dto!.Username))
+            .Ensure(user => user == null, CommonError.UsernameTaken)
             .Bind(_ => CreateApplicationUserAsync(request.Dto!));
     
     private async Task<Result> CreateApplicationUserAsync(CreateAccountDto dto)

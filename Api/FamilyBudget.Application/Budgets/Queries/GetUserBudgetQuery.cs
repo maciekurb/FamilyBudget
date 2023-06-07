@@ -24,7 +24,16 @@ public class GetUserBudgetsQueryHandler : IRequestHandler<GetUserBudgetsQuery, R
     public Task<Result<List<BudgetDto>>>
         Handle(GetUserBudgetsQuery request, CancellationToken cancellationToken) =>
         Result.Success()
-            .Map(() => _appDbContext.Users.Where(x => x.Id == request.UserId)
+            .Map(() => _appDbContext.Users
+                .Include(x => x.Budgets)
+                .ThenInclude(x => x.Expenses)
+                .ThenInclude(x => x.Category)
+                .Include(x => x.Budgets)
+                .ThenInclude(x => x.Incomes)
+                .ThenInclude(x => x.Category)
+                .Include(x => x.Budgets)
+                .ThenInclude(x => x.SharedUsers)
+                .Where(x => x.Id == request.UserId)
                 .SelectMany(u => u.Budgets).ToListAsync(cancellationToken))
             .Map(budgets => _mapper.Map<List<BudgetDto>>(budgets));
 }

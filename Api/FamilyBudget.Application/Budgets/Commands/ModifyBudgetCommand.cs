@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FamilyBudget.Application.Budgets.Commands;
 
-public record ModifyBudgetCommand(BudgetDto Dto) : IRequest<Result<BudgetDto>>;
+public record ModifyBudgetCommand(Guid UserId, BudgetDto Dto) : IRequest<Result<BudgetDto>>;
 
 public class ModifyBudgetCommandHandler : IRequestHandler<ModifyBudgetCommand, Result<BudgetDto>>
 {
@@ -28,7 +28,7 @@ public class ModifyBudgetCommandHandler : IRequestHandler<ModifyBudgetCommand, R
 
     public Task<Result<BudgetDto>> Handle(ModifyBudgetCommand request, CancellationToken cancellationToken) =>
         Result.Success()
-            .Map(async () => await _appDbContext.Users.FindAsync(request.Dto.UserId))
+            .Map(async () => await _appDbContext.Users.FindAsync(request.UserId))
             .Ensure(user => user != null, "User not found")
             .Ensure(_ => request.Dto.BudgetId.HasValue, "Invalid BudgetId")
             .Map(async _ => await _appDbContext.Budgets
